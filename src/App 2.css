@@ -589,41 +589,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* Favorite button in movie actions */
-.movie-actions .favorite-btn {
-    position: static;
-    width: auto;
-    height: auto;
-    border-radius: 8px;
-    background: #e74c3c;
-    color: white;
-    backdrop-filter: none;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.movie-actions .favorite-btn:hover {
-    background: #c0392b;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-}
-
-.movie-actions .favorite-btn i {
-    color: white;
-    font-size: 1rem;
-}
-
-.movie-actions .favorite-btn.favorited {
-    background: #27ae60;
-}
-
-.movie-actions .favorite-btn.favorited:hover {
-    background: #229954;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -761,39 +726,14 @@ body {
     }
     
     .movie-actions {
-        flex-direction: row;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
     }
     
     .movie-actions a,
     .movie-actions button {
-        flex: 1;
-        min-width: 120px;
+        width: 100%;
         text-align: center;
-        font-size: 0.9rem;
-        padding: 0.6rem 1rem;
-    }
-    
-    .movie-actions .favorite-btn {
-        position: static;
-        width: auto;
-        height: auto;
-        border-radius: 8px;
-        background: #e74c3c;
-        color: white;
-        backdrop-filter: none;
-    }
-    
-    .movie-actions .favorite-btn:hover {
-        background: #c0392b;
-        transform: translateY(-2px);
-    }
-    
-    .movie-actions .favorite-btn i {
-        color: white;
-        margin-right: 0.5rem;
     }
     
     .pagination {

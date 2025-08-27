@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY || 'demo_key';
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -8,12 +9,26 @@ function MovieDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
   // Get previous search state from navigation
   const previousSearchState = location.state;
+
+  const handleFavoriteClick = () => {
+    if (!user) {
+      alert('Please log in to add favorites');
+      return;
+    }
+    
+    if (isFavorite(movie.id)) {
+      removeFromFavorites(movie.id);
+    } else {
+      addToFavorites(movie);
+    }
+  };
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -184,6 +199,16 @@ function MovieDetails() {
                 <i className="fab fa-imdb"></i>
                 View on IMDb
               </a>
+            )}
+            {user && (
+              <button 
+                className={`favorite-btn ${isFavorite(movie.id) ? 'favorited' : ''}`}
+                onClick={handleFavoriteClick}
+                title={isFavorite(movie.id) ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <i className={`fas fa-heart ${isFavorite(movie.id) ? 'favorited' : ''}`}></i>
+                {isFavorite(movie.id) ? 'Remove from Favorites' : 'Add to Favorites'}
+              </button>
             )}
             <button 
               onClick={() => navigate('/', { state: previousSearchState })} 

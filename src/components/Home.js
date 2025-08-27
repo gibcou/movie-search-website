@@ -337,9 +337,9 @@ const Home = forwardRef(({ externalSearchQuery, onShowResultsChange }, ref) => {
                 <div className="search-results">
                   {movies.map(movie => (
                     <MovieCard
-                      key={movie.imdbID}
+                      key={movie.id}
                       movie={movie}
-                      onClick={() => handleMovieClick(movie.imdbID)}
+                      onClick={() => handleMovieClick(movie.id)}
                     />
                   ))}
                 </div>
