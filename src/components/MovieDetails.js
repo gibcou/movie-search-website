@@ -32,11 +32,21 @@ function MovieDetails() {
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
+      // Extract movie ID from URL path manually as backup for React Router v7 compatibility
+      const pathParts = window.location.pathname.split('/');
+      const urlId = pathParts[pathParts.length - 1];
+      const movieId = id || urlId;
+      
+      if (!movieId || movieId === 'undefined' || movieId === '' || movieId === 'movie') {
+        setError('Movie ID not found in URL');
+        setLoading(false);
+        return;
+      }
+      
       try {
         setLoading(true);
-        const response = await fetch(
-          `${BASE_URL}/movie/${id}?api_key=${API_KEY}&append_to_response=credits`
-        );
+        const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&append_to_response=credits`;
+        const response = await fetch(url);
         
         if (!response.ok) {
           throw new Error('Movie not found');
