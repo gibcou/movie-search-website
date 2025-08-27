@@ -31,31 +31,31 @@ A modern React application for searching movies with user authentication and fav
 ### Installation
 
 1. Clone the repository:
-```bash
-git clone https://github.com/gibcou/movie-search-app.git
-cd movie-search-app
-```
+   ```bash
+   git clone https://github.com/gibcou/movie-search-website.git
+   cd movie-search-website
+   ```
 
 2. Install dependencies:
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 3. Set up environment variables:
-Create a `.env` file in the root directory and add your API keys:
-```env
-REACT_APP_TMDB_API_KEY=your_tmdb_api_key_here
-```
+   Create a `.env` file in the root directory and add your API keys:
+   ```env
+   REACT_APP_TMDB_API_KEY=your_tmdb_api_key_here
+   ```
 
 4. Configure Firebase:
-Update the Firebase configuration in `src/firebase.js` with your project credentials.
+   Update the Firebase configuration in `src/firebase.js` with your project credentials.
 
 5. Start the development server:
-```bash
-npm start
-```
+   ```bash
+   npm start
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
+6. Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
 
 ## Available Scripts
 
@@ -114,6 +114,7 @@ src/
 ## API Integration
 
 This app uses The Movie Database (TMDB) API for movie data. You'll need to:
+
 1. Create an account at [TMDB](https://www.themoviedb.org/)
 2. Generate an API key
 3. Add the key to your environment variables
@@ -121,11 +122,13 @@ This app uses The Movie Database (TMDB) API for movie data. You'll need to:
 ## Firebase Setup
 
 The app uses Firebase for:
+
 - User authentication
 - Firestore database for user data
 - Real-time data synchronization
 
 Make sure to configure your Firebase project with:
+
 - Authentication enabled (Email/Password provider)
 - Firestore database rules configured
 - Web app registered with Firebase
@@ -155,7 +158,7 @@ The app can be deployed to various platforms:
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the MIT License.
 
 ## Support
 
@@ -163,4 +166,4 @@ If you encounter any issues or have questions, please open an issue on GitHub.
 
 ---
 
-**Built with ❤️ using React and Firebase**
+Built with ❤️ using React and Firebase
