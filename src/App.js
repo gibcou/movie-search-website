@@ -29,7 +29,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <div className="App">
           <Header onSearch={handleHeaderSearch} showResults={showResults} />
           <Routes>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 
-const API_KEY = '7764f155';
-const BASE_URL = 'https://www.omdbapi.com';
+const API_KEY = process.env.REACT_APP_TMDB_API_KEY || 'demo_key';
+const BASE_URL = 'https://api.themoviedb.org/3';
 
 function MovieDetails() {
   const { id } = useParams();
@@ -20,7 +20,7 @@ function MovieDetails() {
       try {
         setLoading(true);
         const response = await fetch(
-          `${BASE_URL}/?apikey=${API_KEY}&i=${id}&plot=full`
+          `${BASE_URL}/movie/${id}?api_key=${API_KEY}&append_to_response=credits`
         );
         
         if (!response.ok) {
@@ -29,8 +29,8 @@ function MovieDetails() {
         
         const data = await response.json();
         
-        if (data.Response === 'False') {
-          throw new Error(data.Error || 'Movie not found');
+        if (!data.id) {
+          throw new Error('Movie not found');
         }
         
         setMovie(data);
@@ -73,21 +73,25 @@ function MovieDetails() {
     );
   }
 
-  const posterUrl = movie.Poster && movie.Poster !== 'N/A' 
-    ? movie.Poster 
-    : '/api/placeholder/300/450';
+  const posterUrl = movie.poster_path 
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
+    : 'https://picsum.photos/300/450?grayscale&blur=1';
 
-  const releaseYear = movie.Year || 'N/A';
-  const runtime = movie.Runtime || 'N/A';
-  const director = movie.Director || 'N/A';
-  const cast = movie.Actors || 'N/A';
-  const genre = movie.Genre || 'N/A';
-  const plot = movie.Plot || 'No plot available';
-  const rating = movie.imdbRating || 'N/A';
+  const releaseYear = movie.release_date ? movie.release_date.substring(0, 4) : 'N/A';
+  const runtime = movie.runtime ? `${movie.runtime} minutes` : 'N/A';
+  const director = movie.credits && movie.credits.crew 
+    ? movie.credits.crew.find(person => person.job === 'Director')?.name || 'N/A'
+    : 'N/A';
+  const cast = movie.credits && movie.credits.cast 
+    ? movie.credits.cast.slice(0, 5).map(actor => actor.name).join(', ') || 'N/A'
+    : 'N/A';
+  const genre = movie.genres ? movie.genres.map(g => g.name).join(', ') : 'N/A';
+  const plot = movie.overview || 'No plot available';
+  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
 
-  const imdbUrl = movie.imdbID 
-    ? `https://www.imdb.com/title/${movie.imdbID}` 
-    : null;
+  const imdbUrl = movie.imdb_id 
+    ? `https://www.imdb.com/title/${movie.imdb_id}` 
+    : `https://www.themoviedb.org/movie/${movie.id}`;
 
   return (
     <div className="movie-detail-page">
@@ -95,10 +99,10 @@ function MovieDetails() {
         <div>
           <img 
             src={posterUrl} 
-            alt={movie.Title}
+            alt={movie.title}
             className="movie-poster-large"
             onError={(e) => {
-              e.target.src = '/api/placeholder/300/450';
+              e.target.src = 'https://picsum.photos/300/450?grayscale&blur=1';
             }}
           />
         </div>
@@ -113,7 +117,7 @@ function MovieDetails() {
             Back to Search
           </Link>
           
-          <h1>{movie.Title}</h1>
+          <h1>{movie.title}</h1>
           
           <div className="movie-details-meta">
             <span>{releaseYear}</span>
@@ -154,17 +158,17 @@ function MovieDetails() {
               </div>
             )}
             
-            {movie.Country && (
+            {movie.production_countries && movie.production_countries.length > 0 && (
               <div className="credit-item">
                 <h4>Country</h4>
-                <p>{movie.Country}</p>
+                <p>{movie.production_countries.map(country => country.name).join(', ')}</p>
               </div>
             )}
             
-            {movie.Language && (
+            {movie.spoken_languages && movie.spoken_languages.length > 0 && (
               <div className="credit-item">
                 <h4>Language</h4>
-                <p>{movie.Language}</p>
+                <p>{movie.spoken_languages.map(lang => lang.english_name).join(', ')}</p>
               </div>
             )}
           </div>

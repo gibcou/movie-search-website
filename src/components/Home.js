@@ -2,8 +2,8 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { useNavigate, useLocation } from 'react-router-dom';
 import MovieCard from './MovieCard';
 
-const API_KEY = '7764f155';
-const BASE_URL = 'https://www.omdbapi.com';
+const API_KEY = process.env.REACT_APP_TMDB_API_KEY || 'demo_key';
+const BASE_URL = 'https://api.themoviedb.org/3';
 
 const Home = forwardRef(({ externalSearchQuery, onShowResultsChange }, ref) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,7 +91,7 @@ const Home = forwardRef(({ externalSearchQuery, onShowResultsChange }, ref) => {
     
     try {
       const response = await fetch(
-        `${BASE_URL}/?apikey=${API_KEY}&s=${encodeURIComponent(query)}&page=${page}`
+        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`
       );
       
       if (!response.ok) {
@@ -100,7 +100,7 @@ const Home = forwardRef(({ externalSearchQuery, onShowResultsChange }, ref) => {
       
       const data = await response.json();
       
-      if (data.Response === 'False') {
+      if (!data.results || data.results.length === 0) {
         setMovies([]);
         setTotalPages(0);
         setCurrentPage(1);
@@ -108,12 +108,13 @@ const Home = forwardRef(({ externalSearchQuery, onShowResultsChange }, ref) => {
         return;
       }
       
-      let filteredMovies = data.Search || [];
+      let filteredMovies = data.results || [];
       
       // Apply year filter
       if (yearFilter) {
         filteredMovies = filteredMovies.filter(movie => {
-          return movie.Year === yearFilter;
+          const movieYear = movie.release_date ? movie.release_date.substring(0, 4) : '';
+          return movieYear === yearFilter;
         });
       }
       
@@ -122,13 +123,17 @@ const Home = forwardRef(({ externalSearchQuery, onShowResultsChange }, ref) => {
         filteredMovies = [...filteredMovies].sort((a, b) => {
           switch (sortBy) {
             case 'title-asc':
-              return a.Title.localeCompare(b.Title);
+              return a.title.localeCompare(b.title);
             case 'title-desc':
-              return b.Title.localeCompare(a.Title);
+              return b.title.localeCompare(a.title);
             case 'year-newest':
-              return parseInt(b.Year) - parseInt(a.Year);
+              const yearA = a.release_date ? parseInt(a.release_date.substring(0, 4)) : 0;
+              const yearB = b.release_date ? parseInt(b.release_date.substring(0, 4)) : 0;
+              return yearB - yearA;
             case 'year-oldest':
-              return parseInt(a.Year) - parseInt(b.Year);
+              const yearC = a.release_date ? parseInt(a.release_date.substring(0, 4)) : 0;
+              const yearD = b.release_date ? parseInt(b.release_date.substring(0, 4)) : 0;
+              return yearC - yearD;
             default:
               return 0;
           }
@@ -136,7 +141,7 @@ const Home = forwardRef(({ externalSearchQuery, onShowResultsChange }, ref) => {
       }
       
       setMovies(filteredMovies);
-      setTotalPages(Math.ceil(parseInt(data.totalResults) / 10) || 1);
+      setTotalPages(data.total_pages || 1);
       setCurrentPage(page);
       setShowResults(true);
     } catch (err) {

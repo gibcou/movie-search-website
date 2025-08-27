@@ -3,12 +3,12 @@ import { useAuth } from '../contexts/AuthContext';
 
 const MovieCard = ({ movie, onClick }) => {
   const { user, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
-  const posterUrl = movie.Poster && movie.Poster !== 'N/A' 
-    ? movie.Poster 
-    : '/api/placeholder/280/400';
+  const posterUrl = movie.poster_path 
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
+    : 'https://picsum.photos/280/400?grayscale&blur=1';
   
-  const releaseYear = movie.Year || 'N/A';
-  const isMovieFavorite = isFavorite(movie.imdbID);
+  const releaseYear = movie.release_date ? movie.release_date.substring(0, 4) : 'N/A';
+  const isMovieFavorite = isFavorite(movie.id);
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation(); // Prevent movie click when clicking favorite button
@@ -19,7 +19,7 @@ const MovieCard = ({ movie, onClick }) => {
     }
     
     if (isMovieFavorite) {
-      removeFromFavorites(movie.imdbID);
+      removeFromFavorites(movie.id);
     } else {
       addToFavorites(movie);
     }
@@ -39,14 +39,14 @@ const MovieCard = ({ movie, onClick }) => {
       
       <img 
         src={posterUrl} 
-        alt={movie.Title}
+        alt={movie.title}
         className="movie-poster"
         onError={(e) => {
-          e.target.src = '/api/placeholder/280/400';
+          e.target.src = 'https://picsum.photos/280/400?grayscale&blur=1';
         }}
       />
       <div className="movie-info">
-        <h3 className="movie-title">{movie.Title}</h3>
+        <h3 className="movie-title">{movie.title}</h3>
         <p className="movie-year">{releaseYear}</p>
         <span className="movie-type">{movie.Type}</span>
       </div>

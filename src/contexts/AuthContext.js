@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }) => {
   const addToFavorites = (movie) => {
     if (!user) return false;
     
-    const isAlreadyFavorite = favorites.some(fav => fav.imdbID === movie.imdbID);
+    const isAlreadyFavorite = favorites.some(fav => fav.id === movie.id);
     if (!isAlreadyFavorite) {
       setFavorites(prev => [...prev, movie]);
       return true;
@@ -105,12 +105,12 @@ export const AuthProvider = ({ children }) => {
   const removeFromFavorites = (movieId) => {
     if (!user) return false;
     
-    setFavorites(prev => prev.filter(fav => fav.imdbID !== movieId));
+    setFavorites(prev => prev.filter(fav => fav.id !== movieId));
     return true;
   };
 
   const isFavorite = (movieId) => {
-    return favorites.some(fav => fav.imdbID === movieId);
+    return favorites.some(fav => fav.id === movieId);
   };
 
   const value = {

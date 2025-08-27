@@ -48,14 +48,14 @@ function Favorites() {
       ) : (
         <div className="favorites-grid">
           {favorites.map((movie) => (
-            <div key={movie.imdbID} className="favorite-movie-item">
+            <div key={movie.id} className="favorite-movie-item">
               <MovieCard 
                 movie={movie}
-                onClick={() => handleMovieClick(movie.imdbID)}
+                onClick={() => handleMovieClick(movie.id)}
               />
               <button 
                 className="remove-favorite-btn"
-                onClick={(e) => handleRemoveFavorite(movie.imdbID, e)}
+                onClick={(e) => handleRemoveFavorite(movie.id, e)}
                 title="Remove from favorites"
               >
                 <i className="fas fa-times"></i>
